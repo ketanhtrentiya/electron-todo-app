@@ -24,6 +24,9 @@ const menuTemplate = [
       },
       {
         label: "Quit",
+        click() {
+          app.quit();
+        }
       }
     ],
   },
