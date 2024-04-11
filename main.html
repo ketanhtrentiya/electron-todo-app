@@ -10,14 +10,18 @@
 
     <!-- JS -->
     <script>
-        const electron = require('electron');
-        const { ipcRenderer } = electron;
+        const todoList = document.querySelector('ul');
 
-        ipcRenderer.on('todo:newItem', (event, item) => {
+        window.api.on('todo:newItem', (item) => {
+            console.log('- - - item : ', item);
             const li = document.createElement('li');
             const text = document.createTextNode(item);
             li.appendChild(text);
-            document.querySelector('ul').appendChild(li);
+            todoList.appendChild(li);
+        });
+
+        window.api.on('todo:deleteAll', () => {
+            todoList.innerHTML = "";
         });
     </script>
 </body>

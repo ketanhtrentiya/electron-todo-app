@@ -8,8 +8,9 @@ let addWindow;
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: `${__dirname}/preload.js`,
     },
   });
   mainWindow.loadURL(`file://${__dirname}/main.html`);
@@ -25,10 +26,19 @@ function createAddWindow() {
     width: 300,
     height: 200,
     title: "Add New Todo",
-    webPreferences: { nodeIntegration: true, contextIsolation: false },
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: `${__dirname}/preload.js`,
+    },
   });
   addWindow.loadURL(`file://${__dirname}/views/add.html`);
   addWindow.on("closed", () => (addWindow = null));
+}
+
+// Delete All
+function deleteAllTodo() {
+  mainWindow.webContents.send("todo:deleteAll");
 }
 
 ipcMain.on("todo:add", (event, todo) => {
@@ -44,6 +54,12 @@ const menuTemplate = [
         label: "New Todo",
         click() {
           createAddWindow();
+        },
+      },
+      {
+        label: "Delete All",
+        click() {
+          deleteAllTodo();
         },
       },
       {
