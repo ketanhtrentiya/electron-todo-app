@@ -17,14 +17,14 @@ app.on("ready", () => {
   Menu.setApplicationMenu(mainMenu);
 
   // Handle Application Close Event
-  mainWindow.on('closed', () => app.quit());
+  mainWindow.on("closed", () => app.quit());
 });
 
 function createAddWindow() {
   addWindow = new BrowserWindow({
     width: 300,
     height: 200,
-    title: "Add New Todo"
+    title: "Add New Todo",
   });
   addWindow.loadURL(`file://${__dirname}/views/add.html`);
 }
@@ -37,21 +37,21 @@ const menuTemplate = [
         label: "New Todo",
         click() {
           createAddWindow();
-        }
+        },
       },
       {
         label: "Quit",
         accelerator: (() => {
-          if(process.platform === 'darwin') {
+          if (process.platform === "darwin") {
             return "Command + Q";
           } else {
-            return "Ctrl + Q"
+            return "Ctrl + Q";
           }
         })(),
         click() {
           app.quit();
-        }
-      }
+        },
+      },
     ],
   },
 ];
@@ -59,5 +59,20 @@ const menuTemplate = [
 if (process.platform === "darwin") {
   menuTemplate.unshift({
     label: "",
+  });
+}
+
+if (process.env.NODE_ENV !== "production") {
+  menuTemplate.push({
+    label: "View",
+    submenu: [
+      {
+        label: "Toggle Developer Tools",
+        accelerator: process.platform === "darwin" ? "Command + Alt + I" : "Ctrl + Shift + I",
+        click(item, focusedWindow) {
+          focusedWindow.toggleDevTools();
+        },
+      },
+    ],
   });
 }
